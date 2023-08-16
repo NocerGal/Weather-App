@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const api = {
   token: 'c37623aaa37f5bb486b7ae2f641abea5',
-  base: 'https://api.openweathermap.org/data/2.5/',
+  base: 'https:///api.openweathermap.org/data/2.5/',
 };
 
 function Weather() {
@@ -20,14 +20,18 @@ function Weather() {
 
   const handlSubmitForm = async (e) => {
     e.preventDefault();
-    const response = await fetch(
-      `${api.base}weather?q=${city}&units=metric&appid=${api.token}&lang=fr`
-    );
-    const listCountries = await fetch(
+
+    const listCountries = await axios.get(
       `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${api.token}`
     );
-    const responseBody = await response.json();
-    const responseListCountries = await listCountries.json();
+    const responseListCountries = listCountries.data;
+    console.log(responseListCountries);
+    const response = await axios.get(
+      `${api.base}weather?q=${city}&units=metric&appid=${api.token}&lang=fr`
+    );
+
+    const responseBody = response.data;
+
     setIcon(
       `https://openweathermap.org/img/wn/${responseBody.weather[0].icon}@2x.png`
     );
@@ -64,11 +68,5 @@ function Weather() {
     </>
   );
 }
-
-Weather.propTypes = {
-  localisation: PropTypes.string.isRequired,
-  icon: PropTypes.string,
-  alt: PropTypes.string,
-};
 
 export default Weather;
