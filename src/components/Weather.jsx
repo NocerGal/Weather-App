@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
+import SwitchAgregat from './ToogleSwitch/ToogleSwitch';
+import { AggregatContext } from '../utils';
 
 const api = {
   token: 'c37623aaa37f5bb486b7ae2f641abea5',
@@ -13,6 +15,8 @@ function Weather() {
   const [countryCode, setCountryCode] = useState('');
   const [translateCity, setTranslateCity] = useState('');
   const [temperature, setTemperature] = useState('');
+
+  const { aggregat } = useContext(AggregatContext);
 
   const onChangeCity = (e) => {
     setCity(e.target.value);
@@ -44,28 +48,30 @@ function Weather() {
   };
 
   return (
-    <>
-      <div className="container">
-        <form onSubmit={handlSubmitForm}>
-          <label htmlFor="localisation">Localisation</label>
-          <input
-            type="text"
-            id="localisation"
-            name="localisation"
-            placeholder={'write a localisation...'}
-            onChange={onChangeCity}
-            required
-          />
-          <button type="submit">Rechercher</button>
-        </form>
-        <h1>{translateCity}</h1>
-        <div className="container__first">
-          <p>{weather}</p>
-          <img src={icon} alt={weather} />
-        </div>
-        <p>{temperature}</p>
+    <div className="container">
+      <SwitchAgregat firstChoice="°C" secondChoice="°F" />
+      <form onSubmit={handlSubmitForm}>
+        <label htmlFor="localisation">Localisation</label>
+        <input
+          type="text"
+          id="localisation"
+          name="localisation"
+          placeholder={'write a localisation...'}
+          onChange={onChangeCity}
+          required
+        />
+        <button type="submit">Rechercher</button>
+      </form>
+      <h1>{translateCity}</h1>
+      <p>{weather}</p>
+      <div className="container__first">
+        <p>
+          {temperature}
+          {aggregat == true ? '°C' : '°F'}
+        </p>
+        <img src={icon} alt={weather} />
       </div>
-    </>
+    </div>
   );
 }
 

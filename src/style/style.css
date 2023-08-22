@@ -6,6 +6,7 @@
 :root {
   --seablue: #5cafe7;
   --skyblue: #82cef9;
+  --lightblue: #aed9f2;
   --white: #fbfbfb;
   --yellow: #ffe361;
   --pink: #ff679d;
@@ -18,13 +19,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--white);
+  background-image: linear-gradient(
+    to right top,
+    #74c2f7,
+    #5ba1d1,
+    #4181ac,
+    #286289,
+    #0a4567
+  );
 }
 
 .container {
+  /* position: relative; */
   border-radius: 10px;
   padding: 30px;
-  background-color: var(--seablue);
+  /* background-color: var(--seablue); */
+  -webkit-box-shadow: 0px 0px 127px -1px rgba(97, 202, 250, 1);
+  -moz-box-shadow: 0px 0px 127px -1px rgba(97, 202, 250, 1);
+  box-shadow: 0px 0px 127px 20px rgba(97, 202, 250, 1);
 }
 
 .container__first {
@@ -47,8 +59,9 @@ label {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   letter-spacing: 1px;
+  color: var(--white);
 }
 
 form {
@@ -60,30 +73,37 @@ form {
 }
 
 input {
-  border-radius: 15px;
+  border-radius: 20px;
   text-align: center;
   border: none;
   font-family: 'Montserrat', sans-serif;
-  padding: 5px;
-  margin-bottom: 10px;
+  padding: 13px;
+  margin-bottom: 20px;
+  outline: none;
 }
 
 input:focus {
-  outline: none;
+  -webkit-box-shadow: inset 0px 0px 18px -3px rgba(0, 73, 121, 0.53);
+  -moz-box-shadow: inset 0px 0px 18px -3px rgba(0, 73, 121, 0.53);
+  box-shadow: inset 0px 0px 18px -3px rgba(0, 73, 121, 0.53);
 }
 
 button {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
-  border-radius: 15px;
+  border-radius: 20px;
   border-bottom: 15px;
-  padding: 6px 15px;
+  padding: 10px 0;
   outline: none;
   border: none;
   background-color: #004979;
   color: white;
   cursor: pointer;
-  width: 100%;
+  width: 155px;
+}
+
+button:hover {
+  background-color: #225476;
 }
 
 p {
@@ -92,7 +112,103 @@ p {
   font-weight: 400;
 }
 
+p::first-letter {
+  text-transform: uppercase;
+}
+
 img {
   /* height: 3rem; */
   height: 100%;
+}
+
+p {
+  color: var(--white);
+  text-align: center;
+}
+
+/***** Toggle *****/
+/* The switch - the box around the slider */
+.switcher {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 120px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.switcher span {
+  color: var(--white);
+  font-family: var(--font-Montserrat);
+}
+
+.switch {
+  position: relative;
+  top: 0;
+  width: 60px;
+  height: 34px;
+  margin: 0;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--lightblue);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--seablue);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  /* background-color: #2196f3; */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.aggregat {
+  /* height: 100%;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
 }
