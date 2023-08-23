@@ -1,22 +1,19 @@
 import { useContext, useState } from 'react';
-import axios from 'axios';
 import SwitchAgregat from './ToogleSwitch/ToogleSwitch';
-import { AggregatContext } from '../utils';
-
-const api = {
-  token: 'c37623aaa37f5bb486b7ae2f641abea5',
-  base: 'https:///api.openweathermap.org/data/2.5/',
-};
+import { AggregatContext } from '../contexts/AggregatContext';
+import { fetchCountries, fetchCityWeather } from '../services/api';
 
 function Weather() {
-  const [city, setCity] = useState('');
-  const [icon, setIcon] = useState('');
-  const [weather, setWeather] = useState('');
-  const [countryCode, setCountryCode] = useState('');
-  const [translateCity, setTranslateCity] = useState('');
-  const [temperature, setTemperature] = useState('');
-
   const { aggregat } = useContext(AggregatContext);
+  const [city, setCity] = useState('');
+  const [weatherInfo, setWeatherInfo] = useState({
+    icon: '',
+    weather: '',
+    countryCode: '',
+    translateCity: '',
+    temperature: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const onChangeCity = (e) => {
     setCity(e.target.value);
@@ -24,32 +21,28 @@ function Weather() {
 
   const handlSubmitForm = async (e) => {
     e.preventDefault();
-
-    const listCountries = await axios.get(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${api.token}`
-    );
-    const responseListCountries = listCountries.data;
-    console.log(responseListCountries);
-    const response = await axios.get(
-      `${api.base}weather?q=${city}&units=metric&appid=${api.token}&lang=fr`
-    );
-
-    const responseBody = response.data;
-
-    setIcon(
-      `https://openweathermap.org/img/wn/${responseBody.weather[0].icon}@2x.png`
-    );
-    setWeather(responseBody.weather[0].description);
-    setCountryCode(responseBody.sys.country);
-    setTranslateCity(
-      responseListCountries[0].local_names[countryCode.toLowerCase()]
-    );
-    setTemperature(Math.round(responseBody.main.temp * 2) / 2);
+    try {
+      const countries = await fetchCountries(city);
+      const weather = await fetchCityWeather(city);
+      const countriesData = countries.data;
+      const weatherData = weather.data;
+      setWeatherInfo({
+        icon: `https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`,
+        weather: weatherData.weather[0].description,
+        countryCode: weatherData.sys.country,
+        translateCity:
+          countriesData[0].local_names[weatherInfo.countryCode.toLowerCase()],
+        temperature: Math.round(weatherData.main.temp * 2) / 2,
+      });
+      setSubmitted(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="container">
-      <SwitchAgregat firstChoice="°C" secondChoice="°F" />
+      <SwitchAgregat aggregatOne="°C" aggregatTwo="°F" />
       <form onSubmit={handlSubmitForm}>
         <label htmlFor="localisation">Localisation</label>
         <input
@@ -62,14 +55,21 @@ function Weather() {
         />
         <button type="submit">Rechercher</button>
       </form>
-      <h1>{translateCity}</h1>
-      <p>{weather}</p>
-      <div className="container__first">
-        <p>
-          {temperature}
-          {aggregat == true ? '°C' : '°F'}
-        </p>
-        <img src={icon} alt={weather} />
+      <div
+        className="container"
+        style={{ display: submitted ? 'block' : 'none' }}
+      >
+        <h1>{weatherInfo.translateCity}</h1>
+        <p>{weatherInfo.weather}</p>
+        <div className="container__first">
+          <p>
+            {aggregat === false
+              ? Math.round(weatherInfo.temperature * (9 / 5) + 32)
+              : weatherInfo.temperature}
+            {aggregat == true ? '°C' : '°F'}
+          </p>
+          <img src={weatherInfo.icon} alt={weatherInfo.weather} />
+        </div>
       </div>
     </div>
   );

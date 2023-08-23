@@ -1,8 +1,8 @@
 import { createContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 export const AggregatContext = createContext();
 
-// eslint-disable-next-line react/prop-types
 export const AggregatProvider = ({ children }) => {
   const [aggregat, setAggregat] = useState(true);
   const toggleAggregat = () => {
@@ -13,4 +13,8 @@ export const AggregatProvider = ({ children }) => {
       {children}
     </AggregatContext.Provider>
   );
+};
+
+AggregatProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

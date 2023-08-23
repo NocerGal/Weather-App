@@ -1,20 +1,25 @@
 import { useContext } from 'react';
-import { AggregatContext } from '../../utils';
+import { AggregatContext } from '../../contexts/AggregatContext';
+import PropTypes from 'prop-types';
 
-function SwitchAgregat({ firstChoice, secondChoice }) {
+function SwitchAgregat({ aggregatOne, aggregatTwo }) {
   const { toggleAggregat } = useContext(AggregatContext);
 
   return (
     <div className="switcher">
-      <span>{firstChoice}</span>
-
+      <span>{aggregatOne}</span>
       <label className="switch">
         <input type="checkbox" onClick={toggleAggregat} />
         <span className="slider round"></span>
       </label>
-      <span>{secondChoice}</span>
+      <span>{aggregatTwo}</span>
     </div>
   );
 }
+
+SwitchAgregat.propTypes = {
+  aggregatOne: PropTypes.string.isRequired,
+  aggregatTwo: PropTypes.string.isRequired,
+};
 
 export default SwitchAgregat;
